@@ -1,4 +1,5 @@
 package com.nighthawk.spring_portfolio.mvc.calendar;
+import java.time.*;
 
 // Prototype Implementation
 
@@ -8,7 +9,7 @@ public class APCalendar {
      * isLeapYear(2019) returns False
      * isLeapYear(2016) returns True
      */          
-    public static boolean isLeapYear(int year1, int year2) {
+    public static boolean isLeapYear(int year) {
         // implementation not shown
         // if (year % 4 == 0) and (year % 100 == 0);
         //     return true;
@@ -17,28 +18,27 @@ public class APCalendar {
         // if (year % 4 != 0) and (year % 4 != 0);
         //     return false;
         // // {
-            int numberOfLeapYears = 0;
-
-            for(int y=year1; y<=year2; y++)
-                if (isLeapYear(y))
-                    numberOfLeapYears++;
-
-            return numberOfLeapYears;  
-         }
-          
+            {
+                boolean result = (year % 400 == 0) || (year % 4 == 0) && (year % 100 != 0);
+                return result; }
+            }
         
-    /** Returns the value representing the day of the week  
+            /** Returns the value representing the day of the week  
      * 0 denotes Sunday, 
      * 1 denotes Monday, ..., 
      * 6 denotes Saturday. 
      * firstDayOfYear(2019) returns 2 for Tuesday.
     */
-    private static int firstDayOfYear(int year, int month, int day) {
+    private static int firstDayOfYear(int year) {
         // implementation not shown
-            int firstDay = firstDayOfYear(year);
-            int dAy = dayOfYear(month, firstDay, year);
-            return (firstDay + dAy -1) % 7; //-1 for 0 number index, mod7 makes sure it's a 7# index
-        return 0;
+		LocalDateTime t = LocalDateTime.of(year, Month.JANUARY, 1, 0, 0);
+		// get Java day of week which is 1-7, where 1=Monday and 7=Sunday
+		int result = t.getDayOfWeek().getValue();
+		// adjust from 1-7 numbering (Mon->Sun) to 0-6 numbering (Sun->Sat) to meet AP Exam requirement
+		if(result == 7)
+			result = 0;
+		System.out.format("APCalendar firstDayOfYear: %d-%02d-%02d is day of year number %d%n", year, 1, 1, result);
+		return result;
         }
 
 
@@ -95,8 +95,7 @@ public class APCalendar {
             number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + 31 + 30 + day);
         }
 
-
-        return day_number;
+        return number;
     }
     /** Returns the number of leap years between year1 and year2, inclusive.
      * Precondition: 0 <= year1 <= year2
@@ -115,24 +114,21 @@ public class APCalendar {
     */
     public static int dayOfWeek(int month, int day, int year) { 
         // to be implemented in part (b)
-        Date date = new Date(year, month - 1, day);
-        if (date.getDay() == 0) {
-            return 6;
+        int day_of_the_year = dayOfYear(month, day, year);
+        int remainder = day_of_the_year % 7;
+        int first_day = firstDayOfYear(year);
+        return first_day + remainder - 1;
         }
-        else {
-            return date.getDay() - 1;
-        }
-        }
+
     /** Tester method */
     public static void main(String[] args) {
         // Private access modifiers
-        System.out.println("firstDayOfYear: " + APCalendar.firstDayOfYear(2022));
-        System.out.println("dayOfYear: " + APCalendar.dayOfYear(1, 1, 2022));
-
-        // Public access modifiers
-        System.out.println("isLeapYear: " + APCalendar.isLeapYear(2022));
-        System.out.println("numberOfLeapYears: " + APCalendar.numberOfLeapYears(2000, 2022));
-        System.out.println("dayOfWeek: " + APCalendar.dayOfWeek(1, 1, 2022));
+            System.out.println("firstDayOfYear: " + APCalendar.firstDayOfYear(2022));
+            System.out.println("dayOfYear: " + APCalendar.dayOfYear(1, 1, 2022));
     }
-
-}
+            // Public access modifiers
+         {   System.out.println("isLeapYear: " + APCalendar.isLeapYear(2022));
+            System.out.println("numberOfLeapYears: " + APCalendar.numberOfLeapYears(2000, 2022));
+            System.out.println("dayOfWeek: " + APCalendar.dayOfWeek(1, 1, 2022));
+           }
+        }

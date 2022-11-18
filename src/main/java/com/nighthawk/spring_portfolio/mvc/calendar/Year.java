@@ -1,5 +1,7 @@
 package com.nighthawk.spring_portfolio.mvc.calendar;
 
+import java.io.InputStream;
+
 /** Simple POJO 
  * Used to Interface with APCalendar
  * The toString method(s) prepares object for JSON serialization
@@ -39,22 +41,13 @@ class Year {
       return isLeapYearToString(); 
    }
 
-   static int dayOfWeek(int y, int m, int d)
-
-   static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-      y -= m < 3;
-   return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
-
-
- //Returns the value representing the day of the week //
-public int firstDayOfYear(int year) {
-   // implementation not shown
-   return dayofyear(1, 1, year);
-}
-
    public static void main(String[] args) {
       Year year = new Year();
       year.setYear(2022);
       System.out.println(year);
-   
    }
+
+public InputStream firstDayOfYearToString() {
+    return null;
+}
+}
