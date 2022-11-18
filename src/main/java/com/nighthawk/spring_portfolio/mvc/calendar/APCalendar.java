@@ -51,17 +51,53 @@ public class APCalendar {
     private static int dayOfYear(int month, int day, int year) {
         // implementation not shown
          // initializes dayValue as 0
-         int dayVal = 0;
-         for (int i = 1; i < month; i++) {
-             // Creates a yearmonth object for each month in the year
-             int monthDays = YearMonth.of(year, i).lengthOfMonth();
-             dayVal += monthDays;
-         }
-         //Adds the day of the incomplete month to dayVal
-         dayVal += day;
-         return dayVal;
-         }
+         int number = 0;
+        if (isLeapYear(year)){
+            number +=1;
+        }
 
+        //jan
+        if (month ==1){
+            number = number + day;
+        }
+        //feb
+        else if (month ==2){
+            number = number + (31 + day);
+        }
+        else if (month ==3){
+            number = number + (31 + 28 + day);
+        }
+        else if (month ==4){
+            number = number + (31 + 28 + 31+ day);
+        }
+        else if (month ==5){
+            number = number + (31 + 28 + 31+ 30 + day);
+        }
+        else if (month ==6){
+            number = number + (31 + 28 + 31+ +30 + 31+ day);
+        }
+        else if (month ==7){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + day);
+        }
+        else if (month ==8){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ day);
+        }
+        else if (month ==9){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + day);
+        }
+        else if (month ==10){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + day);
+        }
+        else if (month ==11){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + 31 + day);
+        }
+        else if (month ==12){
+            number = number + (31 + 28 + 31+ +30 + 31+ 30 + 31+ 31 + 30 + 31 + 30 + day);
+        }
+
+
+        return day_number;
+    }
     /** Returns the number of leap years between year1 and year2, inclusive.
      * Precondition: 0 <= year1 <= year2
     */ 
