@@ -27,3 +27,4 @@ public class ExceptionHandlerAdvice {
                 .body("JSON failed to map");
     }
 }
+

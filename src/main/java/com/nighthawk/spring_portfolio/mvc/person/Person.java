@@ -18,15 +18,13 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.springframework.data.mongodb.core.schema.JsonSchemaObject.Type.JsonType;
 import org.springframework.format.annotation.DateTimeFormat;
-
-// import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-
 /*
 Person is a POJO, Plain Old Java Object.
 First set of annotations add functionality to POJO
@@ -51,8 +49,7 @@ public class Person {
     @Size(min=5)
     @Column(unique=true)
     @Email
-    private String email;
-
+    private String email;    
     @NotEmpty
     private String password;
 
@@ -64,6 +61,18 @@ public class Person {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
     
+    @Column(unique=false)
+    private int height;
+
+    @Column(unique=false)
+    private int weight;
+
+    @Column(name = "occupation")
+    private String occupation;
+    
+    @Column(name = "BMI")
+    private String BMI;
+
 
     /* HashMap is used to store JSON for daily "stats"
     "stats": {
@@ -78,12 +87,31 @@ public class Person {
     private Map<String,Map<String, Object>> stats = new HashMap<>(); 
     
 
+
     // Constructor used when building object from an API
-    public Person(String email, String password, String name, Date dob) {
+    public Person(String email, String password, String name, int height, String occupation, Date dob) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.dob = dob;
+        this.occupation = occupation;
+        this.height = height;
+    }
+
+    //more person attributes
+    public double weight(){
+        double one = this.height * this.height * 25;
+        double weight = one/704;
+        return weight;
+    }     
+    public int getBmi(){
+        int bmi = (int)( 703 * this.weight / Math.pow(this.height, 2) );
+        return bmi;
+    }    
+
+
+    public String toString(){
+        return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name + ", " + "\"height\": " + this.height + "\"dob\": " + this.dob + " ," + "\"occupation\": " + this.occupation + " ," + "\"weight\": " + this.weight() + " ," + "\"bmi\": " + this.getBmi() + ", " + "\"age\": "+this.getAge()+ " }" );
     }
 
     // A custom getter to return age from dob attribute
@@ -94,4 +122,26 @@ public class Person {
         return -1;
     }
 
+    public String getAgeToString(){
+        return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }" );
+    }
+
+
+    public static void main(String[] args){
+        
+        Person Saumya = new Person();
+        System.out.println(Saumya);
+
+        LocalDate myDate = LocalDate.of(2006, 11, 21);
+        Date date = Date.from(myDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Person allArgsPerson = new Person("saumyp3@gmail.com", "sPALk", "Saumya Palakodety", 53, "student", date);
+        System.out.println(allArgsPerson.getAge());
+        System.out.println(allArgsPerson);
+
+        //more methods
+        // System.out.println(allArgsPerson.toString());
+    }
 }
+
+
+

@@ -16,6 +16,18 @@ public class PersonApiController {
     #### RESTful API ####
     Resource: https://spring.io/guides/gs/rest-service/
     */
+    @GetMapping("getAge/{id}")
+    public String getAge (@PathVariable long id) {
+        Optional<Person> optional = repository.findById(id);
+        if (optional.isPresent()) {  // Good ID
+            Person person = optional.get();  // value from findByID
+            String ageToString = person.getAgeToString();
+            return ageToString;  // OK HTTP response: status code, headers, and body
+        }
+        // Bad ID
+        return "Error";      
+    }
+
 
     // Autowired enables Control to connect POJO Object through JPA
     @Autowired
@@ -65,15 +77,18 @@ public class PersonApiController {
     public ResponseEntity<Object> postPerson(@RequestParam("email") String email,
                                              @RequestParam("password") String password,
                                              @RequestParam("name") String name,
-                                             @RequestParam("dob") String dobString) {
-        Date dob;
+                                             @RequestParam("height") int height,
+                                             @RequestParam("occupation") String occupation,
+                                             @RequestParam("dob") String dobString){
+
+
+        Date dob; 
         try {
             dob = new SimpleDateFormat("MM-dd-yyyy").parse(dobString);
         } catch (Exception e) {
             return new ResponseEntity<>(dobString +" error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
-        }
-        // A person object WITHOUT ID will create a new record with default roles as student
-        Person person = new Person(email, password, name, dob);
+        }        // A person object WITHOUT ID will create a new record with default roles as student
+        Person person = new Person(email, password, name, height, occupation, dob);
         repository.save(person);
         return new ResponseEntity<>(email +" is created successfully", HttpStatus.CREATED);
     }
@@ -113,7 +128,7 @@ public class PersonApiController {
             }
 
             // Set Date and Attributes to SQL HashMap
-            Map<String, Map<String, Object>> date_map = new HashMap<>();
+            Map<String, Map<String, Object>> date_map = person.getStats();
             date_map.put( (String) stat_map.get("date"), attributeMap );
             person.setStats(date_map);  // BUG, needs to be customized to replace if existing or append if new
             repository.save(person);  // conclude by writing the stats updates

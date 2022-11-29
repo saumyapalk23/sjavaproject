@@ -10,6 +10,7 @@ import java.io.InputStream;
 class Year {
    private int year;
    private boolean isLeapYear;
+   // private boolean dayOfYear;
 
    // zero argument constructor
    public Year() {} 
